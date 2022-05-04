@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}VAT Calculator{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+    <div clas="row" id="form">
+        {{ form_start(form) }}
+            <div class="form-group">
+                <div class="col-md-12 mb-3">
+                    {{ form_row(form.value, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>   
+            <div class="form-group">
+                <div class="col-md-12 mb-3">
+                    {{ form_row(form.vat, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>                  
+            <div class="form-group">
+                <div class="col-md-12 col-md-offset-4" style="margin-top:5px;">
+                    <button type="submit" class="col-12 btn-primary d-grid gap-2">
+                        <i class="fa fa-btn fa-user"></i> Calculate VAT
+                    </button>
+                </div>
+            </div>
+        {{ form_end(form) }}
+    </div>
+    <div class="row" id="table">
+        <a class="" href="{{ path('export') }}"><button type="button" class="col-12 btn-success text-white">Export Data</button></a>
+        <a class="" href="{{ path('delete_all') }}"><button type="button" class="col-12 btn-danger text-white">Delete Data</button></a>
+        <div class="col-sm-12 col-md-12 table-responsive">
+            <h3 class="text-center">Excluding VAT</h3>
+            <table class="table table-striped table-light">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Value</th>
+                        <th>Vat Rate</th>
+                        <th>Excluding Value</th>
+                        <th>Including Value</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody name="exTable" id="exTable">
+                    {% for vatcalc in pagination %}
+                    <tr>
+                        <td>{{ vatcalc.id}}</td>
+                        <td>£{{ vatcalc.value }}</td>
+                        <td>{{ vatcalc.vat }}%</td>
+                        <td>£{{ vatcalc.excludingvalue|number_format(2) }}</td>
+                        <td>£{{ vatcalc.includingvalue|number_format(2) }}</td>                        
+                        <td><a href="{{ path('delete_row', {'id': vatcalc.id}) }}">Delete</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div> 
+      {{ knp_pagination_render(pagination, null, {}, {
+      'align': 'center',
+      'size': 'small',
+      'rounded': true,
+      }) }}           
+    </div>
+</div>
+{% endblock %}
